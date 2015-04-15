@@ -1,0 +1,15 @@
+{
+  "name": "spotifytokenswap",
+  "version": "1.0.0",
+  "description": "Swaps out an access token for spotify iOS apps",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rory Gilchrist",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.12.3",
+    "request": "^2.55.0"
+  }
+}
