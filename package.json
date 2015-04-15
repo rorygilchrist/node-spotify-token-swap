@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.12.3",
     "newrelic": "^1.18.2",
-    "request": "^2.55.0"
+    "request": "^2.55.0",
+    "body-parser": "^1.12.2"
   }
 }

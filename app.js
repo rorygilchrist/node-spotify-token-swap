@@ -2,10 +2,10 @@ if (!!process.env.PRODUCTION) {
     require('newrelic');
 }
 
-var http = require('request');
 var express = require('express');
 var url = require('url');
 var crypto = require('crypto');
+var request = require('request');
 
 var app = express();
 
@@ -15,6 +15,9 @@ var clientCallback = process.env.CALLBACK_URI;
 var encSecret = process.env.ENCRYPTION_SECRET;
 var authString = new Buffer(clientId + ':' + clientSecret).toString('base64');
 var authorizationHeader = 'Basic ' + authString;
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var spotifyEndpoint = 'https://accounts.spotify.com/api/token';
 
@@ -33,14 +36,17 @@ function decrypt(text){
 }
 
 app.post('/swap', function (req, res) {
+    console.log(req.params);
+    console.log(req);
+    console.log(req.body);
     var formData = {
         grant_type : 'authorization_code',
         redirect_uri : clientCallback,
-        code : req.params.code
+        code : req.body.code
     };
     
     var options = {
-        uri : url.parse(url),
+        uri : url.parse(spotifyEndpoint),
         headers : {
             'Authorization' : authorizationHeader
         },
@@ -51,16 +57,16 @@ app.post('/swap', function (req, res) {
 
     request(options, function(error, response, body) {
         if (response.statusCode === 200) {
-            body.refreshToken = encrypt(body.refreshToken);
+            body.refresh_token = encrypt(body.refresh_token);
         }
         
-        res.setStatus(response.statusCode);
+        res.status(response.statusCode);
         res.json(body);
     });
 });
 
 app.post('/refresh', function (req, res) {
-    var refreshToken = decerypt(req.params.refresh_token);
+    var refreshToken = decerypt(req.query.refresh_token);
     
     var formData = {
         grant_type : 'refresh_token',
@@ -68,7 +74,7 @@ app.post('/refresh', function (req, res) {
     };
     
     var options = {
-        uri : url.parse(url),
+        uri : url.parse(spotifyEndpoint),
         headers : {
             'Authorization' : authorizationHeader
         },
@@ -78,7 +84,7 @@ app.post('/refresh', function (req, res) {
     }
 
     request(options, function(error, response, body) {
-        res.setStatus(response.statusCode);
+        res.status(response.statusCode);
         res.json(body);
     });
 });
@@ -87,6 +93,6 @@ app.get('/', function(req, res) {
     res.send('Hello world!')
 });
 
-var server = app.listen(process.env.PORT || 8080, function () {
+var server = app.listen(process.env.PORT || 2349, function () {
   console.log('Token app listening on port %s', process.env.PORT);
 });
