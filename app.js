@@ -80,8 +80,7 @@ app.post('/refresh', function (req, res) {
 });
 
 app.get('/', function(req, res) {
-    res.send(encrypt('hello world dkfdfjlsksj lkjfsfjsld jfsfllfk d'))
-    //res.send('Nothing to see here!');
+    res.send('Hello world!')
 });
 
 var server = app.listen(process.env.PORT || 8080, function () {
