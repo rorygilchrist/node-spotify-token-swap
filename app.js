@@ -1,3 +1,7 @@
+if (!!process.env.PRODUCTION) {
+    require('newrelic');
+}
+
 var http = require('request');
 var express = require('express');
 var url = require('url');
