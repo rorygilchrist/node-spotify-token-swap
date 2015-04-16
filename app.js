@@ -66,7 +66,7 @@ app.post('/swap', function (req, res) {
 });
 
 app.post('/refresh', function (req, res) {
-    var refreshToken = decerypt(req.query.refresh_token);
+    var refreshToken = decerypt(req.body.refresh_token);
     
     var formData = {
         grant_type : 'refresh_token',
