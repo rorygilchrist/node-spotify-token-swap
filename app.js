@@ -66,7 +66,11 @@ app.post('/swap', function (req, res) {
 });
 
 app.post('/refresh', function (req, res) {
-    var refreshToken = decerypt(req.body.refresh_token);
+    if (!req.body.refresh_token) {
+        res.status(400).json({ error : 'Refresh token is missing from body' });
+    }
+
+    var refreshToken = decrypt(req.body.refresh_token);
     
     var formData = {
         grant_type : 'refresh_token',
