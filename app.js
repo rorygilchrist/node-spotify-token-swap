@@ -6,6 +6,14 @@ if (!!process.env.NEW_RELIC_LICENSE_KEY) {
     require('newrelic');
 }
 
+if (!process.env.CLIENT_ID ||
+    !process.env.CLIENT_SECRET ||
+    !process.env.CALLBACK_URI
+) {
+    console.log('Environment variables not set up correctly. Please set CLIENT_ID, CLIENT_SECRET and CALLBACK_URI in the environment this app is running in. For help, see README');
+    process.exit(1);
+}
+
 var express = require('express');
 var url = require('url');
 var request = require('request');

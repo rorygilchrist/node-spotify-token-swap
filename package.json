@@ -28,5 +28,13 @@
     "server",
     "token",
     "swap"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rorygilchrist/node-spotify-token-swap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rorygilchrist/node-spotify-token-swap/issues"
+  },
+  "homepage": "https://github.com/rorygilchrist/node-spotify-token-swap"
 }
