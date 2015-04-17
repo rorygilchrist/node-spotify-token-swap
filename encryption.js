@@ -11,12 +11,12 @@ var encSecret = process.env.ENCRYPTION_SECRET || randomstring.generate(30);
  *
  * return String The encrypted string
  */
-module.exports.encrypt = function(text){
-    var cipher = crypto.createCipher('aes-256-ctr', encSecret);
-    var crypted = cipher.update(text, 'utf8', 'hex');
+module.exports.encrypt = function (text) {
+    var cipher = crypto.createCipher('aes-256-ctr', encSecret),
+        crypted = cipher.update(text, 'utf8', 'hex');
     crypted += cipher.final('hex');
     return crypted;
-}
+};
 
 /**
  * Uses encryption secret defined in environment to decrypt
@@ -27,9 +27,9 @@ module.exports.encrypt = function(text){
  *
  * return String The decrypted string
  */
-module.exports.decrypt = function(text){
-    var decipher = crypto.createDecipher('aes-256-ctr', encSecret);
-    var dec = decipher.update(text, 'hex', 'utf8');
+module.exports.decrypt = function (text) {
+    var decipher = crypto.createDecipher('aes-256-ctr', encSecret),
+        dec = decipher.update(text, 'hex', 'utf8');
     dec += decipher.final('utf8');
     return dec;
-}
+};

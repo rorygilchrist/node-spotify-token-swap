@@ -6,11 +6,17 @@ if (!!process.env.NEW_RELIC_LICENSE_KEY) {
     require('newrelic');
 }
 
-if (!process.env.CLIENT_ID ||
-    !process.env.CLIENT_SECRET ||
-    !process.env.CALLBACK_URI
+if (
+    !process.env.CLIENT_ID ||
+        !process.env.CLIENT_SECRET ||
+        !process.env.CALLBACK_URI
 ) {
-    console.log('Environment variables not set up correctly. Please set CLIENT_ID, CLIENT_SECRET and CALLBACK_URI in the environment this app is running in. For help, see README');
+    console.log(
+        'Environment variables not set up correctly. Please set CLIENT_ID,' +
+            'CLIENT_SECRET and CALLBACK_URI in the environment this app is running in.' +
+            'For help, see README'
+    );
+
     process.exit(1);
 }
 
@@ -45,22 +51,21 @@ var spotifyEndpoint = 'https://accounts.spotify.com/api/token';
  */
 app.post('/swap', function (req, res) {
     var formData = {
-        grant_type : 'authorization_code',
-        redirect_uri : clientCallback,
-        code : req.body.code
-    };
-    
-    var options = {
-        uri : url.parse(spotifyEndpoint),
-        headers : {
-            'Authorization' : authorizationHeader
+            grant_type : 'authorization_code',
+            redirect_uri : clientCallback,
+            code : req.body.code
         },
-        form : formData,
-        method : 'POST',
-        json : true
-    }
+        options = {
+            uri : url.parse(spotifyEndpoint),
+            headers : {
+                'Authorization' : authorizationHeader
+            },
+            form : formData,
+            method : 'POST',
+            json : true
+        };
 
-    request(options, function(error, response, body) {
+    request(options, function (error, response, body) {
         if (response.statusCode === 200) {
             body.refresh_token = encrpytion.encrypt(body.refresh_token);
         }
@@ -83,24 +88,22 @@ app.post('/refresh', function (req, res) {
         return;
     }
 
-    var refreshToken = encrpytion.decrypt(req.body.refresh_token);
-    
-    var formData = {
-        grant_type : 'refresh_token',
-        refresh_token : refreshToken
-    };
-    
-    var options = {
-        uri : url.parse(spotifyEndpoint),
-        headers : {
-            'Authorization' : authorizationHeader
+    var refreshToken = encrpytion.decrypt(req.body.refresh_token),
+        formData = {
+            grant_type : 'refresh_token',
+            refresh_token : refreshToken
         },
-        form : formData,
-        method : 'POST',
-        json : true
-    }
+        options = {
+            uri : url.parse(spotifyEndpoint),
+            headers : {
+                'Authorization' : authorizationHeader
+            },
+            form : formData,
+            method : 'POST',
+            json : true
+        };
 
-    request(options, function(error, response, body) {
+    request(options, function (error, response, body) {
         if (response.statusCode === 200 && !!body.refresh_token) {
             body.refresh_token = encrpytion.encrypt(body.refresh_token);
         }
@@ -114,10 +117,10 @@ app.post('/refresh', function (req, res) {
  * Present a nice message to those who are trying to find a default
  * endpoint for the service.
  */
-app.get('/', function(req, res) {
-    res.send('Hello world!')
+app.get('/', function (req, res) {
+    res.send('Hello world!');
 });
 
 var server = app.listen(process.env.PORT || 4343, function () {
-  console.log('Token app listening on port %s', process.env.PORT || 4343);
+    console.log('Token app listening on port %s', process.env.PORT || 4343);
 });
