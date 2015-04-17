@@ -1,14 +1,23 @@
-if (!!process.env.PRODUCTION) {
+/**
+ * If we have a new relic license key, we'll use it.
+ * This is useful for keeping Heroku instances online.
+ */
+if (!!process.env.NEW_RELIC_LICENSE_KEY) {
     require('newrelic');
 }
 
 var express = require('express');
 var url = require('url');
-var crypto = require('crypto');
 var request = require('request');
+var encrpytion = require('./encryption.js');
 
 var app = express();
 
+/**
+ * Set these variables in your local environment.
+ * Your client ID and secret can be found in your app
+ * settings in Spotify Developer.
+ */
 var clientId = process.env.CLIENT_ID;
 var clientSecret = process.env.CLIENT_SECRET;
 var clientCallback = process.env.CALLBACK_URI;
@@ -20,11 +29,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var spotifyEndpoint = 'https://accounts.spotify.com/api/token';
 
-
+/**
+ * Swap endpoint
+ *
+ * Uses an authentication code on req.body to request access and
+ * refresh tokens. Refresh token is encrypted for safe storage.
+ */
 app.post('/swap', function (req, res) {
-    console.log(req.params);
-    console.log(req);
-    console.log(req.body);
     var formData = {
         grant_type : 'authorization_code',
         redirect_uri : clientCallback,
@@ -43,7 +54,7 @@ app.post('/swap', function (req, res) {
 
     request(options, function(error, response, body) {
         if (response.statusCode === 200) {
-            body.refresh_token = encrypt(body.refresh_token);
+            body.refresh_token = encrpytion.encrypt(body.refresh_token);
         }
         
         res.status(response.statusCode);
@@ -51,12 +62,20 @@ app.post('/swap', function (req, res) {
     });
 });
 
+/**
+ * Refresh endpoint
+ *
+ * Uses the encrypted token on request body to get a new access token.
+ * If spotify returns a new refresh token, this is encrypted and sent
+ * to the client, too.
+ */
 app.post('/refresh', function (req, res) {
     if (!req.body.refresh_token) {
         res.status(400).json({ error : 'Refresh token is missing from body' });
+        return;
     }
 
-    var refreshToken = decrypt(req.body.refresh_token);
+    var refreshToken = encrpytion.decrypt(req.body.refresh_token);
     
     var formData = {
         grant_type : 'refresh_token',
@@ -74,15 +93,23 @@ app.post('/refresh', function (req, res) {
     }
 
     request(options, function(error, response, body) {
+        if (response.statusCode === 200 && !!body.refresh_token) {
+            body.refresh_token = encrpytion.encrypt(body.refresh_token);
+        }
+
         res.status(response.statusCode);
         res.json(body);
     });
 });
 
+/**
+ * Present a nice message to those who are trying to find a default
+ * endpoint for the service.
+ */
 app.get('/', function(req, res) {
     res.send('Hello world!')
 });
 
-var server = app.listen(process.env.PORT || 2349, function () {
-  console.log('Token app listening on port %s', process.env.PORT);
+var server = app.listen(process.env.PORT || 4343, function () {
+  console.log('Token app listening on port %s', process.env.PORT || 4343);
 });
