@@ -6,7 +6,7 @@ Spotify Token Swap service for Node.js environments. Used to swap out and refres
 ## Setting up
 To begin using this service, simply clone this repository (`git clone git@github.com:rorygilchrist/node-spotify-token-swap.git`), set your environment variables and run `node app.js`. The required environment variables are as follows:
 - `CLIENT_ID` - Your client's ID. This can be found on your app page on [Spotify Developer Portal](https://developer.spotify.com/my-applications/#!/applications).
-- `CLIENT_SECRET` - Your client's ID. This can be found on your app page on [Spotify Developer Portal](https://developer.spotify.com/my-applications/#!/applications).
+- `CLIENT_SECRET` - Your client's secret key. This can be found on your app page on [Spotify Developer Portal](https://developer.spotify.com/my-applications/#!/applications).
 - `CALLBACK_URL` - Your application's callback url. You should have set this up when you created your app.
 - `ENCRYPTION_SECRET` - Secret key used to encrypt and decrypt your refresh tokens. If this is not set, a key will be automatically generated and will change on application restart causing all of your currently logged in users to be logged out on refresh.
 
