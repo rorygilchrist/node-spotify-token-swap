@@ -25,7 +25,7 @@ This application is built for deployment in a Heroku environment (however it can
 While Heroku is a great, easy to use, platform the fact it shuts your free app down after 10 minutes sucks. There is a way around this and it's super easy.
 1. Navigate to the application folder and run the command `heroku addons:add newrelic:wayne`, this will create a New Relic account for you and add your app to it. 
 2. Restart your server using the command `heroku ps:restart web`.
-3. That's it, the rest has already been done for you. To monitor uptime, dive into the New Relic dashboard.
+3. That's it, the rest has already been done for you. To monitor uptime, dive into the New Relic dashboard & configure pings.
 
 ##Using New Relic on a non-Heroku deploy
 If you don't want to use Heroku to deploy your application, that's fine. You can still use New Relic to monitor uptime and performance. Simply [sign up](https://newrelic.com/signup), get your licence key and add it as an environment variable called `NEW_RELIC_LICENSE_KEY`. Once you've done this, restart your server and your data should start appearing in your New Relic dashboard.
