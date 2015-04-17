@@ -19,7 +19,7 @@ This application is built for deployment in a Heroku environment (however it can
 2. Create a new application container for your token swap service `heroku create`
 3. Set your environment variables by running `heroku config:set KEY=VALUE`, where KEY is a variable name, such as `CLIENT_ID` and VALUE is the value of the variable.
 4. Run the command `git push heroku master` to deploy your application.
-5. Finally, to fire up your server, run `heroku ps:scale web.1`. This will launch a free instance of your application which will shutdown after 10 minutes of inactivity and will be awoken when it's needed.
+5. Finally, to fire up your server, run `heroku ps:scale web=1`. This will launch a free instance of your application which will shutdown after 10 minutes of inactivity and will be awoken when it's needed.
 
 ##Keeping your app alive on Heroku
 While Heroku is a great, easy to use platform, the fact it shuts your free app down after 10 minutes sucks. There is a way around this and it's super easy.
