@@ -1,6 +1,8 @@
 # Node Spotify Token Swap Service
 Spotify Token Swap service for Node.js environments. Used to swap out and refresh tokens for client applications from Spotify SDKs.
 
+![Travis Build](https://travis-ci.org/rorygilchrist/node-spotify-token-swap.svg?branch=master)
+
 ## Setting up
 To begin using this service, simply clone this repository (`git clone git@github.com:rorygilchrist/node-spotify-token-swap.git`), set your environment variables and run `node app.js`. The required environment variables are as follows:
 - `CLIENT_ID` - Your client's ID. This can be found on your app page on [Spotify Developer Portal](https://developer.spotify.com/my-applications/#!/applications).
