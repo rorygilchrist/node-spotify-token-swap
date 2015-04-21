@@ -12,6 +12,7 @@ if (
         !process.env.CALLBACK_URI
 ) {
     console.log(
+        '[' + new Date().toISOString() + ']',
         'Environment variables not set up correctly. Please set CLIENT_ID,' +
             'CLIENT_SECRET and CALLBACK_URI in the environment this app is running in.' +
             'For help, see README'
@@ -49,7 +50,7 @@ var spotifyEndpoint = 'https://accounts.spotify.com/api/token';
  * Uses an authentication code on req.body to request access and
  * refresh tokens. Refresh token is encrypted for safe storage.
  */
-app.post('/swap', function (req, res) {
+app.post('/swap', function (req, res, next) {
     var formData = {
             grant_type : 'authorization_code',
             redirect_uri : clientCallback,
@@ -72,6 +73,8 @@ app.post('/swap', function (req, res) {
         
         res.status(response.statusCode);
         res.json(body);
+
+        next();
     });
 });
 
@@ -82,7 +85,7 @@ app.post('/swap', function (req, res) {
  * If spotify returns a new refresh token, this is encrypted and sent
  * to the client, too.
  */
-app.post('/refresh', function (req, res) {
+app.post('/refresh', function (req, res, next) {
     if (!req.body.refresh_token) {
         res.status(400).json({ error : 'Refresh token is missing from body' });
         return;
@@ -110,6 +113,8 @@ app.post('/refresh', function (req, res) {
 
         res.status(response.statusCode);
         res.json(body);
+
+        next();
     });
 });
 
@@ -117,10 +122,41 @@ app.post('/refresh', function (req, res) {
  * Present a nice message to those who are trying to find a default
  * endpoint for the service.
  */
-app.get('/', function (req, res) {
+app.get('/', function (req, res, next) {
     res.send('Hello world!');
+    next();
+});
+
+/**
+ * Logging output to the console in a format which can be read
+ * by log viewers and the like. Runs after every request which
+ * calls next. Typically ends a chain.
+ *
+ * This is turned on by default, to turn it off, set ACCESS_LOG=off
+ * in the environment variables.
+ */
+app.use(function (req, res) {
+    if (!!process.env.ACCESS_LOG && process.env.ACCESS_LOG == 'off') {
+        return;
+    }
+
+    var accessParts = [
+        req.method.toUpperCase(),
+        req.hostname,
+        req.path,
+        req.protocol.toUpperCase(),
+    ];
+
+    var parts = [
+        '[' + new Date().toISOString() + ']',
+        '[Client: ' + req.ip + ']',
+        '"' + accessParts.join(' ') + '"',
+        res.statusCode,
+    ];
+
+    console.log(parts.join(' '));
 });
 
 var server = app.listen(process.env.PORT || 4343, function () {
-    console.log('Token app listening on port %s', process.env.PORT || 4343);
+    console.log('[' + new Date().toISOString() + ']', 'Spotify token swap app listening on port ', process.env.PORT || 4343);
 });

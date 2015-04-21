@@ -9,6 +9,7 @@ To begin using this service, simply clone this repository (`git clone git@github
 - `CLIENT_SECRET` - Your client's secret key. This can be found on your app page on [Spotify Developer Portal](https://developer.spotify.com/my-applications/#!/applications).
 - `CALLBACK_URL` - Your application's callback url. You should have set this up when you created your app.
 - `ENCRYPTION_SECRET` - Secret key used to encrypt and decrypt your refresh tokens. If this is not set, a key will be automatically generated and will change on application restart causing all of your currently logged in users to be logged out on refresh.
+- `ACCESS_LOG` - Optional. Any setting other than 'off' is ignored. Used to turn off per-request output logging.
 
 Environment variables can be setup in Linux environments with the command:
 ` export FOO=bar`, where FOO is the variable name and bar is the value. An example would be `export CLIENT_ID=yourclientid`. This can also be done on Windows, but you're better off asking Google than me (: 
