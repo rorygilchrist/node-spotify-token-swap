@@ -140,6 +140,8 @@ app.use(function (req, res) {
         return;
     }
 
+    var ip = req.headers["x-forwarded-for"] || req.ip;
+
     var accessParts = [
         req.method.toUpperCase(),
         req.hostname,
@@ -149,9 +151,10 @@ app.use(function (req, res) {
 
     var parts = [
         '[' + new Date().toISOString() + ']',
-        '[Client: ' + req.ip + ']',
+        '[Client: ' + ip + ']',
         '"' + accessParts.join(' ') + '"',
         res.statusCode,
+        '"' + req.headers["user-agent"] + '"',
     ];
 
     console.log(parts.join(' '));
